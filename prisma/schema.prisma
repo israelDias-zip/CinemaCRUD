@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Genero {
+  ACAO
+  COMEDIA
+  DRAMA
+  TERROR
+  FICCAO_CIENTIFICA
+  ANIMACAO
+  DOCUMENTARIO
+  ROMANCE
+}
+
+model Cinema {
+  id       Int      @id @default(autoincrement())
+  nome     String
+  endereco String
+  salas    Sala[]
+  filmes   Filme[]
+  sessoes  Sessao[]
+}
+
+model Sala {
+  id         Int      @id @default(autoincrement())
+  numero     Int
+  capacidade Int
+  poltronas  Int[]
+  cinemaId   Int
+  cinema     Cinema   @relation(fields: [cinemaId], references: [id])
+  sessoes    Sessao[]
+}
+
+model Filme {
+  id                 Int      @id @default(autoincrement())
+  titulo             String
+  sinopse            String
+  classificacao      String
+  duracao            Int
+  elenco             String
+  genero             Genero
+  dataIniciaExibicao DateTime
+  dataFinalExibicao  DateTime
+  cinemaId           Int
+  cinema             Cinema   @relation(fields: [cinemaId], references: [id])
+  sessoes            Sessao[]
+}
+
+model Sessao {
+  id               Int        @id @default(autoincrement())
+  horacrioExibicao DateTime
+  filmeId          Int
+  filme            Filme      @relation(fields: [filmeId], references: [id])
+  salaId           Int
+  sala             Sala       @relation(fields: [salaId], references: [id])
+  cinemaId         Int
+  cinema           Cinema     @relation(fields: [cinemaId], references: [id])
+  ingressos        Ingresso[]
+}
+
+model Ingresso {
+  id           Int      @id @default(autoincrement())
+  valorInteira Float
+  valorMeia    Float
+  sessaoId     Int
+  sessao       Sessao   @relation(fields: [sessaoId], references: [id])
+  pedidos      Pedido[]
+}
+
+model Pedido {
+  id         Int           @id @default(autoincrement())
+  qtInteira  Int
+  qtMeia     Int
+  valorTotal Float
+  ingressos  Ingresso[]
+  lanches    LancheCombo[]
+}
+
+model LancheCombo {
+  id            Int    @id @default(autoincrement())
+  nome          String
+  descricao     String
+  valorUnitario Float
+  qtUnidade     Int
+  subtotal      Float
+  pedidoId      Int
+  pedido        Pedido @relation(fields: [pedidoId], references: [id])
+}

@@ -10,9 +10,6 @@ build/
 .env.*
 !.env.example
 
-# Prisma
-prisma/migrations/
-
 # Logs
 logs/
 *.log
@@ -37,3 +34,5 @@ coverage/
 
 # Nest CLI cache
 .nest/
+
+/generated/prisma
