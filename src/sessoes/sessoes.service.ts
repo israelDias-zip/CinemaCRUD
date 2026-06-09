@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateSessoeDto } from './dto/create-sessoe.dto';
 import { UpdateSessoeDto } from './dto/update-sessoe.dto';
 
 @Injectable()
 export class SessoesService {
+  constructor(private prisma: PrismaService) {}
+
   create(createSessoeDto: CreateSessoeDto) {
-    return 'Ação: adicionar uma nova sessão';
+    return this.prisma.sessao.create({ data: createSessoeDto });
   }
 
   findAll() {
-    return 'Ação: retornar todas as sessões';
+    return this.prisma.sessao.findMany();
   }
 
   findOne(id: number) {
-    return `Ação: retornar a sessão #${id}`;
+    return this.prisma.sessao.findUnique({ where: { id } });
   }
 
   update(id: number, updateSessoeDto: UpdateSessoeDto) {
-    return `Ação: atualizar a sessão #${id}`;
+    return this.prisma.sessao.update({ where: { id }, data: updateSessoeDto });
   }
 
   remove(id: number) {
-    return `Ação: remover a sessão #${id}`;
+    return this.prisma.sessao.delete({ where: { id } });
   }
 }

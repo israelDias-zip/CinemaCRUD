@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateLanchDto } from './dto/create-lanch.dto';
 import { UpdateLanchDto } from './dto/update-lanch.dto';
 
 @Injectable()
 export class LanchesService {
+  constructor(private prisma: PrismaService) {}
+
   create(createLanchDto: CreateLanchDto) {
-    return 'Ação: adicionar um novo lanche/combo';
+    return this.prisma.lancheCombo.create({ data: createLanchDto });
   }
 
   findAll() {
-    return 'Ação: retornar todos os lanches';
+    return this.prisma.lancheCombo.findMany();
   }
 
   findOne(id: number) {
-    return `Ação: retornar o lanche #${id}`;
+    return this.prisma.lancheCombo.findUnique({ where: { id } });
   }
 
   update(id: number, updateLanchDto: UpdateLanchDto) {
-    return `Ação: atualizar o lanche #${id}`;
+    return this.prisma.lancheCombo.update({ where: { id }, data: updateLanchDto });
   }
 
   remove(id: number) {
-    return `Ação: remover o lanche #${id}`;
+    return this.prisma.lancheCombo.delete({ where: { id } });
   }
 }

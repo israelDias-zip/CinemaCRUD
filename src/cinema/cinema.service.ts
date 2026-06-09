@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 import { CreateCinemaDto } from './dto/create-cinema.dto';
 import { UpdateCinemaDto } from './dto/update-cinema.dto';
 
 @Injectable()
 export class CinemaService {
+  constructor(private prisma: PrismaService) {}
+
   create(createCinemaDto: CreateCinemaDto) {
-    return 'Ação: adicionar um novo cinema';
+    return this.prisma.cinema.create({ data: createCinemaDto });
   }
 
   findAll() {
-    return 'Ação: retornar todos os cinemas';
+    return this.prisma.cinema.findMany();
   }
 
   findOne(id: number) {
-    return `Ação: retornar o cinema #${id}`;
+    return this.prisma.cinema.findUnique({ where: { id } });
   }
 
   update(id: number, updateCinemaDto: UpdateCinemaDto) {
-    return `Ação: atualizar o cinema #${id}`;
+    return this.prisma.cinema.update({ where: { id }, data: updateCinemaDto });
   }
 
   remove(id: number) {
-    return `Ação: remover o cinema #${id}`;
+    return this.prisma.cinema.delete({ where: { id } });
   }
 }
